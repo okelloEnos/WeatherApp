@@ -1,13 +1,12 @@
+import '../../weather_barrel.dart';
 
-import '../entities/raise_request_entity.dart';
-import '../repository/raise_request_repository.dart';
+class FetchWeatherPredictionUseCase {
 
-class SubmitRaiseRequestUseCase {
-  final RaiseRequestRepository _repository;
+  final WeatherRepository _repository;
 
-  SubmitRaiseRequestUseCase({required RaiseRequestRepository repository}) : _repository = repository;
+  FetchWeatherPredictionUseCase({required WeatherRepository repository}) : _repository = repository;
 
-  Future<String> call({required RaiseRequestEntity entity}) async {
-    return await _repository.submitRaiseRequest(entity: entity);
+  Future<List<WeatherEntity>> call({required String locationName, required int days}) async {
+    return await _repository.fetchPredictedWeatherRequest(locationName: locationName, days: days);
   }
 }

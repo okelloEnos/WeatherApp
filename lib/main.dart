@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'core/core_barrel.dart';
+import 'features/features_barrel.dart';
 
 /// Features
 /// 1. Current weather
@@ -20,55 +24,14 @@ class WeatherApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(providers: [
-      BlocProvider(
-          create: (_) => LeadsBloc(
-              quotesRepository: QuotesRepository(
-                  quotesDataProvider: QuotesDataProvider(dio: Dio())),
-              leadsRepository: LeadsRepository(
-                  leadsDataProvider: LeadsDataProvider(dio: Dio())))),
-      BlocProvider(
-          create: (_) => CampaignsBloc(
-              repository: CampaignsRepository(
-                  dataProvider: CampaignsDataProvider(dio: Dio())),
-              templatesRepository: TemplatesRepository(
-                  dataProvider: TemplateDataProvider(dio: Dio()))
-          )),
-      BlocProvider(
-          create: (_) => TemplatesBloc(
-              repository: TemplatesRepository(
-                  dataProvider: TemplateDataProvider(dio: Dio())))),
-      BlocProvider(
-          create: (_) => WorkflowsBloc(
-              repository: WorkflowRepository(
-                  dataProvider: WorkflowDataProvider(dio: Dio())))),
-      BlocProvider(
-          create: (_) => QuotesBloc(
-              quotesRepository: QuotesRepository(
-                  quotesDataProvider: QuotesDataProvider(dio: Dio())))),
-      BlocProvider(
-          create: (_) => ContactsBloc(
-              repository: ContactsRepository(
-                  dataProvider: ContactsDataProvider(dio: Dio())))),
-      BlocProvider(
-          create: (_) => GroupCustomerBloc(
-              repository: GroupCustomerRepository(
-                  dataProvider: GroupCustomerDataProvider(dio: Dio())),
-              leadsRepository: LeadsRepository(
-                  leadsDataProvider: LeadsDataProvider(dio: Dio())))),
-      BlocProvider(create: (_) => LoginBloc()),
-      BlocProvider(create: (_) => SignUpBloc()),
-      BlocProvider(create: (_) => ScratchEditorBloc()),
-      BlocProvider(create: (_) => StudioDraftsBloc()),
+      BlocProvider<CurrentWeatherBloc>(create: (_) => locator<CurrentWeatherBloc>()),
+      BlocProvider<PredictedWeatherBloc>(create: (_) => locator<PredictedWeatherBloc>()),
     ], child: const WeatherAppView());
   }
 }
 
-class WeatherAppView extends StatefulWidget {
-  @override
-  State<WeatherAppView> createState() => _WeatherAppViewState();
-}
-
-class _WeatherAppViewState extends State<WeatherAppView> {
+class WeatherAppView extends StatelessWidget {
+  const WeatherAppView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +43,7 @@ class _WeatherAppViewState extends State<WeatherAppView> {
       debugShowCheckedModeBanner: false,
       title: 'Weather App',
       theme: AppTheme.lightTheme(),
-      darkTheme: AppTheme.darkTheme(),
+      darkTheme: AppTheme.lightTheme(),
       themeMode: ThemeMode.light,
     );
   }

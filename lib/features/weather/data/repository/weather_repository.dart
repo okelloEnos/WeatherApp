@@ -1,19 +1,23 @@
-import 'package:britam/features/raise_request/domain/entities/raise_request_entity.dart';
+import '../../weather_barrel.dart';
 
-import '../../domain/repository/raise_request_repository.dart';
-import '../datasources/raise_request_remote_data_source.dart';
-import '../models/raise_request_model.dart';
+class WeatherRepositoryImpl implements WeatherRepository{
+  final WeatherRemoteDataSource _remoteDataSource;
 
-class RaiseRequestRepositoryImpl implements RaiseRequestRepository{
-  final RaiseRequestRemoteDataSource _raiseRequestRemoteDataSource;
-
-  RaiseRequestRepositoryImpl({required RaiseRequestRemoteDataSource raiseRequestRemoteDataSource}) :
-        _raiseRequestRemoteDataSource = raiseRequestRemoteDataSource ;
+  WeatherRepositoryImpl({required WeatherRemoteDataSource remoteDataSource}) :
+        _remoteDataSource = remoteDataSource ;
 
   @override
+  Future<WeatherEntity> fetchCurrentWeatherRequest({required String locationName}) async{
+   WeatherEntity currentWeather = const WeatherEntity();
+   final response = await _remoteDataSource.fetchCurrentWeatherRequest(locationName: locationName);
+   return currentWeather;
+  }
 
-  Future<String> submitRaiseRequest({required RaiseRequestEntity entity}) {
-    return _raiseRequestRemoteDataSource.submitRaiseRequest(model: RaiseRequestModel.fromEntity(entity: entity));
+  @override
+  Future<List<WeatherEntity>> fetchPredictedWeatherRequest({required String locationName, required int days}) async{
+    List<WeatherEntity> predictedWeatherList = [];
+    final response = await _remoteDataSource.fetchPredictedWeatherRequest(locationName: locationName, days: days);
+    return predictedWeatherList;
   }
 
 

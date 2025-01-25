@@ -1,5 +1,10 @@
-import '../entities/raise_request_entity.dart';
 
-abstract class RaiseRequestRepository {
-  Future<String> submitRaiseRequest({required RaiseRequestEntity entity});
+
+import '../../weather_barrel.dart';
+
+abstract class WeatherRepository {
+
+  Future<WeatherEntity> fetchCurrentWeatherRequest({required String locationName});
+
+  Future<List<WeatherEntity>> fetchPredictedWeatherRequest({required String locationName, required int days});
 }

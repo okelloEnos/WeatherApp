@@ -1,34 +1,48 @@
 import 'package:dio/dio.dart';
-import '../../../../core/api/api.dart';
+import 'package:weather_app/core/values/values_barrel.dart';
 import '../../../../core/core_barrel.dart';
-import '../models/raise_request_model.dart';
+import '../../weather_barrel.dart';
 
-abstract class RaiseRequestRemoteDataSource {
+abstract class WeatherRemoteDataSource {
 
-  Future<String> submitRaiseRequest({required RaiseRequestModel model});
+  Future<dynamic> fetchCurrentWeatherRequest({required String locationName});
+
+  Future<dynamic> fetchPredictedWeatherRequest({required String locationName, required int days});
 }
 
-class RaiseRequestRemoteDataSourceImpl implements RaiseRequestRemoteDataSource {
+class WeatherRemoteDataSourceImpl implements WeatherRemoteDataSource {
   final Dio _dio;
 
-  const RaiseRequestRemoteDataSourceImpl({required Dio dio}) : _dio = dio;
+  const WeatherRemoteDataSourceImpl({required Dio dio}) : _dio = dio;
 
   @override
+  Future<dynamic> fetchCurrentWeatherRequest({required String locationName}) async{
+    locationName = "London";
+    var url = "${Constants.baseUrl}/weather?q=$locationName&appid=${Secrets.weatherApiKey}";
 
-  Future<String> submitRaiseRequest({required RaiseRequestModel model}) async{
-    var url = "${Api.baseUrl}/service-request/service-request-without-attachment";
+    final response = await _dio.get(url);
 
-    var data = model.toJson();
+    if((response.statusCode ?? 0) == 200){
+      final weatherResponse = response.data;
 
-    final response = await _dio.post(url, data: data, options: Options(headers: {
-      'Authorization':
-      'Bearer ${locator<SharedPreferencesUtil>().getValidToken()}'
-    }));
+      return weatherResponse;
+    }
+    else {
+      throw("${response.statusMessage}");
+    }
+  }
 
-    if((response.statusCode ?? 0) == 201){
-      final submitResponse = dynamicErrorReturn(response: response.data, errorText: "Could not raise a request");
+  @override
+  Future<dynamic> fetchPredictedWeatherRequest({required String locationName, required int days}) async{
+    locationName = "London";
+    var url = "${Constants.baseUrl}/forecast?appid=${Secrets.weatherApiKey}&cnt=$days&q=$locationName";
 
-      return submitResponse["data"]["content"]["ns:ServiceReqInsert_Output"]["ListOfServicereqio"]["ServiceRequest"]["SRNumber"];
+    final response = await _dio.get(url);
+
+    if((response.statusCode ?? 0) == 200){
+      final weatherResponse = response.data;
+
+      return weatherResponse;
     }
     else {
       throw("${response.statusMessage}");
