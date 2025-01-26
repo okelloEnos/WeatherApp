@@ -16,6 +16,11 @@ class CurrentWeatherBloc
       : _useCase = useCase,
         super(CurrentWeatherInitial()) {
     on<FetchCurrentWeatherEvent>(_onFetchingCurrentWeather);
+
+    add(const FetchCurrentWeatherEvent(city:
+    CityEntity(
+        name: 'Nairobi', country: 'KE', state: 'Nairobi County',
+        latitude: -1.30326415, longitude: 36.826384099341595)));
   }
 
   void _onFetchingCurrentWeather(
@@ -23,7 +28,7 @@ class CurrentWeatherBloc
     try {
       emit(CurrentWeatherLoading());
       final currentWeather =
-          await _useCase.call(locationName: event.locationName);
+          await _useCase.call(city: event.city);
       emit(CurrentWeatherLoaded(currentWeather: currentWeather));
     } on DioException catch (e) {
       emit(CurrentWeatherError(message: e.message.toString()));

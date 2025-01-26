@@ -6,7 +6,7 @@ class FetchWeatherPredictionUseCase {
 
   FetchWeatherPredictionUseCase({required WeatherRepository repository}) : _repository = repository;
 
-  Future<List<WeatherEntity>> call({required String locationName, required int days}) async {
-    return await _repository.fetchPredictedWeatherRequest(locationName: locationName, days: days);
+  Future<List<WeatherEntity>> call({required CityEntity city, required int days}) async {
+    return await _repository.fetchPredictedWeatherRequest(city: city, days: days);
   }
 }

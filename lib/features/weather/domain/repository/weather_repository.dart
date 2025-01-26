@@ -6,7 +6,7 @@ abstract class WeatherRepository {
 
   Future<List<CityEntity>> fetchCitiesRequest({required String locationName});
 
-  Future<WeatherEntity> fetchCurrentWeatherRequest({required String locationName});
+  Future<WeatherEntity> fetchCurrentWeatherRequest({required CityEntity city});
 
-  Future<List<WeatherEntity>> fetchPredictedWeatherRequest({required String locationName, required int days});
+  Future<List<WeatherEntity>> fetchPredictedWeatherRequest({required CityEntity city, required int days});
 }

@@ -8,23 +8,25 @@ class WeatherRepositoryImpl implements WeatherRepository{
 
   @override
   Future<List<CityEntity>> fetchCitiesRequest({required String locationName}) async{
-    WeatherEntity currentWeather = const WeatherEntity();
+    List<CityEntity> listOfCities = [];
     final response = await _remoteDataSource.fetchCitiesRequest(locationName: locationName);
-    // return currentWeather;
-    return [];
+    listOfCities = List.from(response).map((e) => CityModel.fromJson(e).toEntity()).toList();
+    return listOfCities;
   }
 
   @override
-  Future<WeatherEntity> fetchCurrentWeatherRequest({required String locationName}) async{
+  Future<WeatherEntity> fetchCurrentWeatherRequest({required CityEntity city}) async{
    WeatherEntity currentWeather = const WeatherEntity();
-   final response = await _remoteDataSource.fetchCurrentWeatherRequest(locationName: locationName);
+   final response = await _remoteDataSource.fetchCurrentWeatherRequest(city: city.toModel());
+   currentWeather = WeatherModel.fromJson(response).toEntity();
    return currentWeather;
   }
 
   @override
-  Future<List<WeatherEntity>> fetchPredictedWeatherRequest({required String locationName, required int days}) async{
+  Future<List<WeatherEntity>> fetchPredictedWeatherRequest({required CityEntity city, required int days}) async{
     List<WeatherEntity> predictedWeatherList = [];
-    final response = await _remoteDataSource.fetchPredictedWeatherRequest(locationName: locationName, days: days);
+    final response = await _remoteDataSource.fetchPredictedWeatherRequest(city: city.toModel(), days: days);
+    predictedWeatherList = List.from(response['list']).map((e) => WeatherModel.fromJson(e).toEntity()).toList();
     return predictedWeatherList;
   }
 

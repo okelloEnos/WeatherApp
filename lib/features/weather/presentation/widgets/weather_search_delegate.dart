@@ -7,11 +7,10 @@ import 'package:weather_app/core/values/values_barrel.dart';
 import '../../../../core/core_barrel.dart';
 import '../../../features_barrel.dart';
 
-class WeatherSearchDelegate extends SearchCustomDelegate {
+class WeatherSearchDelegate extends SearchCustomDelegate<CityEntity?> {
 
    WeatherSearchDelegate() : super(
    searchFieldLabel: "Search for a city",
-   // searchFieldStyle: const TextStyle(fontSize: 12.0, fontWeight: FontWeight.w200),
    searchFieldDecorationTheme: InputDecorationTheme(
      fillColor: Colors.white,
      filled: true,
@@ -38,13 +37,7 @@ class WeatherSearchDelegate extends SearchCustomDelegate {
      contentPadding: const EdgeInsets.only(left: 16.0, right: 16.0),
    ),
    keyboardType: TextInputType.text,
-   // textInputAction: TextInputAction.search,
    );
-
-   // @override
-   //  ThemeData appBarTheme(BuildContext context) {
-   //    return Theme.of(context);
-   //  }
 
    Timer? _debounce;
 
@@ -75,86 +68,6 @@ class WeatherSearchDelegate extends SearchCustomDelegate {
       },
     );
   }
-
-  // @override
-  // Widget buildResults(BuildContext context) {
-  //   return Text("data - Results");
-  // }
-  //
-  // @override
-  // Widget buildSuggestions(BuildContext context) {
-  //   return Text("data - Suggestions");
-  // }
-///
-   // @override
-   // Widget buildResults(BuildContext context) {
-   //   if (query.length < 3) {
-   //     return Column(
-   //       mainAxisAlignment: MainAxisAlignment.center,
-   //       children: <Widget>[
-   //         Center(
-   //           child: Text(
-   //             "Search term must be longer than two letters.",
-   //           ),
-   //         )
-   //       ],
-   //     );
-   //   }
-   //
-   //   //Add the search term to the searchBloc.
-   //   //The Bloc will then handle the searching and add the results to the searchResults stream.
-   //   //This is the equivalent of submitting the search term to whatever search service you are using
-   //   // InheritedBlocs.of(context)
-   //   //     .searchBloc
-   //   //     .searchTerm
-   //   //     .add(query);
-   //
-   //   return Column(
-   //     children: <Widget>[
-   //       //Build the results based on the searchResults stream in the searchBloc
-   //       // StreamBuilder(
-   //       //   stream: InheritedBlocs.of(context).searchBloc.searchResults,
-   //       //   builder: (context, AsyncSnapshot<List<Result>> snapshot) {
-   //       //     if (!snapshot.hasData) {
-   //       //       return Column(
-   //       //         crossAxisAlignment: CrossAxisAlignment.center,
-   //       //         mainAxisAlignment: MainAxisAlignment.center,
-   //       //         children: <Widget>[
-   //       //           Center(child: CircularProgressIndicator()),
-   //       //         ],
-   //       //       );
-   //       //     } else if (snapshot.data.length == 0) {
-   //       //       return Column(
-   //       //         children: <Widget>[
-   //       //           Text(
-   //       //             "No Results Found.",
-   //       //           ),
-   //       //         ],
-   //       //       );
-   //       //     } else {
-   //       //       var results = snapshot.data;
-   //       //       return ListView.builder(
-   //       //         itemCount: results.length,
-   //       //         itemBuilder: (context, index) {
-   //       //           var result = results[index];
-   //       //           return ListTile(
-   //       //             title: Text(result.title),
-   //       //           );
-   //       //         },
-   //       //       );
-   //       //     }
-   //       //   },
-   //       // ),
-   //     ],
-   //   );
-   // }
-   //
-   // @override
-   // Widget buildSuggestions(BuildContext context) {
-   //   // This method is called everytime the search term changes.
-   //   // If you want to add search suggestions as the user enters their search term, this is the place to do that.
-   //   return Column();
-   // }
 
    @override
    Widget buildResults(BuildContext context) {
@@ -192,10 +105,11 @@ class WeatherSearchDelegate extends SearchCustomDelegate {
              itemBuilder: (context, index) {
                final result = state.cities[index];
                return ListTile(
-                 title: Text(result.cityName),
-                 subtitle: Text(result.country),
+                 title: Text(result.name ?? ""),
+                 subtitle: Text(result.country ?? ""),
                  onTap: () {
                    // Handle navigation or actions when a result is tapped
+                   close(context, result);
                  },
                );
              },
@@ -240,9 +154,9 @@ class WeatherSearchDelegate extends SearchCustomDelegate {
              itemBuilder: (context, index) {
                final suggestion = suggestions[index];
                return ListTile(
-                 title: Text(suggestion.cityName),
+                 title: Text(suggestion.name ?? ""),
                  onTap: () {
-                   query = suggestion.cityName;
+                   query = suggestion.name ?? "";
                    showResults(context); // Triggers buildResults
                  },
                );

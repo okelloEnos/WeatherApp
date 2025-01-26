@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:weather_app/core/common_widgets/common_widgets_barrel.dart';
 import 'package:weather_app/features/features_barrel.dart';
@@ -32,61 +33,79 @@ class WeatherHomeScreen extends StatelessWidget {
                       CustomText(text: "Thu, Apr 25 - 06:32 PM", fontSize: 16.0, fontWeight: FontWeight.w300),
                     ],
                   ),
-                  GestureDetector(onTap: (){
-                    showCustomSearch(
+                  GestureDetector(onTap: () async{
+                   CityEntity? selectedCity =  await showCustomSearch<CityEntity?>(
                       context: context,
                       delegate: WeatherSearchDelegate(),
                     );
+                   
+                   if(selectedCity != null){
+                     context.read<CurrentWeatherBloc>().add(FetchCurrentWeatherEvent(city: selectedCity));
+                     context.read<PredictedWeatherBloc>().add(FetchPredictedWeatherEvent(city: selectedCity, days: 5));
+                   }
                   }, child: Icon(Icons.search, color: theme.colorScheme.onPrimary, size: 32.0,))
                 ],
               ),
               const SizedBox(height: 16.0),
-              GestureDetector(
-                onTap: (){
-                  context.push('/weather_detail', extra: const WeatherEntity());
-                },
-                child: Container(
-                  padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 8.0, bottom: 8.0),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.onPrimary.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: Row(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          const CustomText(text: "Weather", fontSize: 18.0, fontWeight: FontWeight.w500),
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Icon(Icons.location_on_outlined, color: theme.colorScheme.onPrimary.withOpacity(0.6), size: 24.0),
-                              CustomText(text: " London", fontSize: 16.0, fontWeight: FontWeight.w300, color: theme.colorScheme.onPrimary.withOpacity(0.7)),
-                            ],
-                          ),
-                          const SizedBox(height: 24.0),
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              const CustomText(text: "24\u{00B0}", fontSize: 18.0, fontWeight: FontWeight.w500),
-                              // SizedBox(width: 2.0),
-                              CustomText(text: "Mostly Clear", fontSize: 12.0, fontWeight: FontWeight.w200, color: theme.colorScheme.onPrimary.withOpacity(0.7)),
-                            ],
-                          ),
-                        ],
-                      ),
-                      const Spacer(),
-                      Image.asset("assets/images/weather.png", width: 120.0, height: 120.0),
-                      const Spacer(),
-                    ],
-                  ),
-                ),
-              ),
+              BlocBuilder<CurrentWeatherBloc, CurrentWeatherState>(
+  builder: (context, state) {
+   if(state is CurrentWeatherLoaded){
+     return GestureDetector(
+       onTap: (){
+         context.push('/weather_detail', extra: const WeatherEntity());
+       },
+       child: Container(
+         padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 8.0, bottom: 8.0),
+         decoration: BoxDecoration(
+           color: theme.colorScheme.onPrimary.withOpacity(0.2),
+           borderRadius: BorderRadius.circular(8.0),
+         ),
+         child: Row(
+           children: [
+             Column(
+               crossAxisAlignment: CrossAxisAlignment.start,
+               mainAxisSize: MainAxisSize.min,
+               mainAxisAlignment: MainAxisAlignment.start,
+               children: [
+                 const CustomText(text: "Weather", fontSize: 18.0, fontWeight: FontWeight.w500),
+                 Row(
+                   mainAxisSize: MainAxisSize.min,
+                   mainAxisAlignment: MainAxisAlignment.start,
+                   children: [
+                     Icon(Icons.location_on_outlined, color: theme.colorScheme.onPrimary.withOpacity(0.6), size: 24.0),
+                     CustomText(text: " London", fontSize: 16.0, fontWeight: FontWeight.w300, color: theme.colorScheme.onPrimary.withOpacity(0.7)),
+                   ],
+                 ),
+                 const SizedBox(height: 24.0),
+                 Row(
+                   mainAxisSize: MainAxisSize.min,
+                   mainAxisAlignment: MainAxisAlignment.start,
+                   crossAxisAlignment: CrossAxisAlignment.end,
+                   children: [
+                     const CustomText(text: "24\u{00B0}", fontSize: 18.0, fontWeight: FontWeight.w500),
+                     // SizedBox(width: 2.0),
+                     CustomText(text: "Mostly Clear", fontSize: 12.0, fontWeight: FontWeight.w200, color: theme.colorScheme.onPrimary.withOpacity(0.7)),
+                   ],
+                 ),
+               ],
+             ),
+             const Spacer(),
+             Image.asset("assets/images/weather.png", width: 120.0, height: 120.0),
+             const Spacer(),
+           ],
+         ),
+       ),
+     );
+   }
+   else if(state is CurrentWeatherError){
+      return Center(child: CustomText(text: state.message, fontSize: 16.0, fontWeight: FontWeight.w500));
+    }
+    else {
+      return const Center(child: CircularProgressIndicator());
+   }
+   
+  },
+),
               const SizedBox(height: 32.0),
               const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -97,50 +116,62 @@ class WeatherHomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8.0),
               Expanded(
-                child: GridView.builder(
-                  itemCount: 5,
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 12.0,
-                      mainAxisSpacing: 12.0,
-                      childAspectRatio: 2/1.5,
-                    ),
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: (){
-                          context.push('/weather_detail', extra: const WeatherEntity());
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(8.0),
-                          decoration: BoxDecoration(
-                            color: theme.colorScheme.onPrimary.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              const CustomText(text: "Friday, April 26", fontSize: 12.0, fontWeight: FontWeight.w500),
-                              const SizedBox(height: 8.0),
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  const CustomText(text: "24\u{00B0}", fontSize: 12.0, fontWeight: FontWeight.w500),
-                                  // SizedBox(width: 2.0),
-                                  CustomText(text: "Mostly Clear", fontSize: 10.0, fontWeight: FontWeight.w200, color: theme.colorScheme.onPrimary.withOpacity(0.7)),
-                                ],
-                              ),
-                              const SizedBox(height: 8.0),
-                              Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Image.asset("assets/images/weather.png", width: 60.0, height: 60.0)),
-                            ],
-                          ),
-                        ),
-                      );
-                    },),
+                child: BlocBuilder<PredictedWeatherBloc, PredictedWeatherState>(
+  builder: (context, state) {
+    if(state is PredictedWeatherLoaded){
+      return GridView.builder(
+        itemCount: 5,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 12.0,
+          mainAxisSpacing: 12.0,
+          childAspectRatio: 2/1.5,
+        ),
+        itemBuilder: (context, index) {
+          return GestureDetector(
+            onTap: (){
+              context.push('/weather_detail', extra: const WeatherEntity());
+            },
+            child: Container(
+              padding: const EdgeInsets.all(8.0),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.onPrimary.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const CustomText(text: "Friday, April 26", fontSize: 12.0, fontWeight: FontWeight.w500),
+                  const SizedBox(height: 8.0),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      const CustomText(text: "24\u{00B0}", fontSize: 12.0, fontWeight: FontWeight.w500),
+                      // SizedBox(width: 2.0),
+                      CustomText(text: "Mostly Clear", fontSize: 10.0, fontWeight: FontWeight.w200, color: theme.colorScheme.onPrimary.withOpacity(0.7)),
+                    ],
+                  ),
+                  const SizedBox(height: 8.0),
+                  Align(
+                      alignment: Alignment.centerRight,
+                      child: Image.asset("assets/images/weather.png", width: 60.0, height: 60.0)),
+                ],
+              ),
+            ),
+          );
+        },);
+    }
+    else if(state is PredictedWeatherError){
+      return Center(child: CustomText(text: state.message, fontSize: 16.0, fontWeight: FontWeight.w500));
+    }
+    else {
+      return const Center(child: CircularProgressIndicator());
+    }
+  },
+),
               ),
             ],
           ),

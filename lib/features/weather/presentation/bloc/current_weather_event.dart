@@ -5,10 +5,10 @@ sealed class CurrentWeatherEvent extends Equatable {
 }
 
 class FetchCurrentWeatherEvent extends CurrentWeatherEvent {
-  final String locationName;
+  final CityEntity city;
 
-  const FetchCurrentWeatherEvent({required this.locationName});
+  const FetchCurrentWeatherEvent({required this.city});
 
   @override
-  List<Object> get props => [locationName];
+  List<Object> get props => [city];
 }
