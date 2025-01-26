@@ -34,44 +34,16 @@ class CustomText extends StatelessWidget {
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
 
-    return (isRequired ?? false)
-        ? Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(text,
-                  overflow: overflow,
-                  textAlign: textAlign ?? TextAlign.start,
-                  style: textStyle ??
-                      TextStyle(
-                        letterSpacing: letterSpacing,
-                        color: color ?? Theme.of(context).colorScheme.primary,
-                        fontWeight: fontWeight ?? FontWeight.w400,
-                        fontSize: fontSize ?? 14.0,
-                        fontFamily: fontFamily ?? 'Helvetica',
-                        fontStyle: fontStyle,
-                        decoration: decoration,
-                        decorationStyle: TextDecorationStyle.double
-                      )),
-              const SizedBox(
-                width: 1.0,
-              ),
-              CustomText(
-                text: "*",
-                fontWeight: FontWeight.w700,
-                color: theme.colorScheme.error,
-              ),
-            ],
-          )
-        : Text(text,
+    return Text(text,
             textAlign: textAlign ?? TextAlign.start,
             overflow: overflow,
             style: textStyle ??
                 TextStyle(
                   letterSpacing: letterSpacing,
-                  color: color ?? theme.colorScheme.primary,
+                  color: color ?? theme.colorScheme.onPrimary,
                   fontWeight: fontWeight ?? FontWeight.w400,
                   fontSize: fontSize ?? 14.0,
-                  fontFamily: fontFamily ?? 'Helvetica',
+                  fontFamily: fontFamily ?? 'Laila',
                   fontStyle: fontStyle,
                   decoration: decoration
                 ));

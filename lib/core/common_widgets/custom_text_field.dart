@@ -67,7 +67,7 @@ class CustomTextField extends StatelessWidget {
           color: textColor ?? Theme.of(context).colorScheme.tertiary,
           fontWeight: FontWeight.w400,
           fontSize: fontSize ?? 16.0,
-          fontFamily: 'Helvetica'),
+          fontFamily: 'Laila'),
       decoration: InputDecoration(
           prefixIcon: prefixIcon != null
               ? Padding(
@@ -96,7 +96,7 @@ class CustomTextField extends StatelessWidget {
               color: theme.hintColor,
               fontWeight: FontWeight.w400,
               fontSize: hintFontSize ?? 14.0,
-              fontFamily: 'Helvetica'),
+              fontFamily: 'Laila'),
           border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(

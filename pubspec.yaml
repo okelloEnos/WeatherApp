@@ -1,6 +1,6 @@
 name: weather_app
 description: "A mobile app that shows current weather and predicts weather for coming days."
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: 'none'
 
 version: 1.0.0+1
 

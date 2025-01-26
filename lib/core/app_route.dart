@@ -16,13 +16,23 @@ final GoRouter appRouter = GoRouter(
     ),
 
     GoRoute(
-      path: '/home',
+      path: '/weather_home',
       pageBuilder: (context, state) => pageBuilderWithTransition(
         context: context,
         state: state,
         duration: 500,
         transitionType: PageTransitionType.rightToLeft,
-        child: HomeScreen(),
+        child: const WeatherHomeScreen(),
+      ),
+    ),
+    GoRoute(
+      path: '/weather_detail',
+      pageBuilder: (context, state) => pageBuilderWithTransition(
+        context: context,
+        state: state,
+        duration: 500,
+        transitionType: PageTransitionType.rightToLeft,
+        child: WeatherDetailScreen(weatherEntity: state.extra as WeatherEntity,),
       ),
     ),
 
