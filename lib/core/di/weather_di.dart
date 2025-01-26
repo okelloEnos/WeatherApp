@@ -15,12 +15,15 @@ void invokeWeatherDI({required GetIt locator}) {
   // use case
   locator.registerLazySingleton(() => FetchCurrentWeatherUseCase(repository: locator()));
   locator.registerLazySingleton(() => FetchWeatherPredictionUseCase(repository: locator()));
+  locator.registerLazySingleton(() => FetchCityListUseCase(repository: locator()));
 
   // bloc
   locator.registerFactory(
       () => CurrentWeatherBloc(useCase: locator()));
   locator.registerFactory(
           () => PredictedWeatherBloc(useCase: locator()));
+  locator.registerFactory(
+          () => SearchBloc(useCase: locator()));
 
 
 }

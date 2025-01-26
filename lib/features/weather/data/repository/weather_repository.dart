@@ -7,6 +7,14 @@ class WeatherRepositoryImpl implements WeatherRepository{
         _remoteDataSource = remoteDataSource ;
 
   @override
+  Future<List<CityEntity>> fetchCitiesRequest({required String locationName}) async{
+    WeatherEntity currentWeather = const WeatherEntity();
+    final response = await _remoteDataSource.fetchCitiesRequest(locationName: locationName);
+    // return currentWeather;
+    return [];
+  }
+
+  @override
   Future<WeatherEntity> fetchCurrentWeatherRequest({required String locationName}) async{
    WeatherEntity currentWeather = const WeatherEntity();
    final response = await _remoteDataSource.fetchCurrentWeatherRequest(locationName: locationName);

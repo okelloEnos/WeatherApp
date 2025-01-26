@@ -26,6 +26,7 @@ class WeatherApp extends StatelessWidget {
     return MultiBlocProvider(providers: [
       BlocProvider<CurrentWeatherBloc>(create: (_) => locator<CurrentWeatherBloc>()),
       BlocProvider<PredictedWeatherBloc>(create: (_) => locator<PredictedWeatherBloc>()),
+      BlocProvider<SearchBloc>(create: (_) => locator<SearchBloc>()),
     ], child: const WeatherAppView());
   }
 }
