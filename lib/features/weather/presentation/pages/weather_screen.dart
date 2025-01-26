@@ -1,36 +1,74 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_app/core/common_widgets/common_widgets_barrel.dart';
+import 'package:weather_app/core/functions/functions_barrel.dart';
+import 'package:weather_app/core/values/values_barrel.dart';
 import 'package:weather_app/features/features_barrel.dart';
 
-class WeatherHomeScreen extends StatelessWidget {
+import '../../../../core/core_barrel.dart';
+
+class WeatherHomeScreen extends StatefulWidget {
   const WeatherHomeScreen({Key? key}) : super(key: key);
 
   @override
+  State<WeatherHomeScreen> createState() => _WeatherHomeScreenState();
+}
+
+class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
+  String? cityName = "";
+  String? country = "";
+  String? state = "";
+  double? latitude = 0.0;
+  double? longitude = 0.0;
+  String? lastUpdated = "";
+
+  @override
   Widget build(BuildContext context) {
+
+    if(locator<SharedPreferences>().getString(Constants.metaDataKey) != null){
+      var cityMetaInfo = jsonDecode(locator<SharedPreferences>().getString(Constants.metaDataKey)!);
+      cityName = cityMetaInfo["name"];
+      country = cityMetaInfo["country"];
+      state = cityMetaInfo["state"];
+      latitude = cityMetaInfo["latitude"];
+      longitude = cityMetaInfo["longitude"];
+      lastUpdated = cityMetaInfo["lastUpdated"];
+    }
+
     var theme = Theme.of(context);
     return Scaffold(
       backgroundColor: theme.colorScheme.background,
-      body: Padding(
+      body: BlocBuilder<NetworkBloc, NetworkStatus>(
+  builder: (context, state) {
+    return Padding(
         padding: const EdgeInsets.only(left: 16.0, right: 16.0),
         child: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              state == NetworkStatus.off
+                  ? Container(
+                  color: Colors.red,
+                  child: const Center(child: CustomText(text: "You are offline", fontSize: 16.0, fontWeight: FontWeight.w500)))
+                  : const SizedBox(),
               const SizedBox(height: 16.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Column(
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      CustomText(text: "Good Morning", fontSize: 18.0, fontWeight: FontWeight.w500),
-                      CustomText(text: "Thu, Apr 25 - 06:32 PM", fontSize: 16.0, fontWeight: FontWeight.w300),
+                      CustomText(text: "Good ${greetingTime()},", fontSize: 18.0, fontWeight: FontWeight.w500),
+                      CustomText(text: "$lastUpdated", fontSize: 16.0, fontWeight: FontWeight.w300),
+                      const CustomText(text: "Thursday, April 25 2025", fontSize: 16.0, fontWeight: FontWeight.w300),
                     ],
                   ),
                   GestureDetector(onTap: () async{
@@ -38,8 +76,17 @@ class WeatherHomeScreen extends StatelessWidget {
                       context: context,
                       delegate: WeatherSearchDelegate(),
                     );
-                   
+
                    if(selectedCity != null){
+                     var cityMetaInfo = {
+                        "name": selectedCity.name,
+                        "country": selectedCity.country,
+                        "state": selectedCity.state,
+                        "latitude": selectedCity.latitude,
+                        "longitude": selectedCity.longitude,
+                       "lastUpdated": DateTime.now().toIso8601String(),
+                     };
+                     locator<SharedPreferences>().setString(Constants.metaDataKey, jsonEncode(cityMetaInfo));
                      context.read<CurrentWeatherBloc>().add(FetchCurrentWeatherEvent(city: selectedCity));
                      context.read<PredictedWeatherBloc>().add(FetchPredictedWeatherEvent(city: selectedCity, days: 5));
                    }
@@ -103,7 +150,7 @@ class WeatherHomeScreen extends StatelessWidget {
     else {
       return const Center(child: CircularProgressIndicator());
    }
-   
+
   },
 ),
               const SizedBox(height: 32.0),
@@ -176,7 +223,9 @@ class WeatherHomeScreen extends StatelessWidget {
             ],
           ),
         ),
-      ),
+      );
+  },
+),
     );
   }
 }

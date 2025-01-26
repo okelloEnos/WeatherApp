@@ -157,7 +157,8 @@ class WeatherSearchDelegate extends SearchCustomDelegate<CityEntity?> {
                  title: Text(suggestion.name ?? ""),
                  onTap: () {
                    query = suggestion.name ?? "";
-                   showResults(context); // Triggers buildResults
+                   // showResults(context); // Triggers buildResults
+                   close(context, suggestion);
                  },
                );
              },

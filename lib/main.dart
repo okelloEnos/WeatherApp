@@ -1,7 +1,9 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'core/core_barrel.dart';
+import 'core/values/values_barrel.dart';
 import 'features/features_barrel.dart';
 
 /// Features
@@ -27,6 +29,10 @@ class WeatherApp extends StatelessWidget {
       BlocProvider<CurrentWeatherBloc>(create: (_) => locator<CurrentWeatherBloc>()),
       BlocProvider<PredictedWeatherBloc>(create: (_) => locator<PredictedWeatherBloc>()),
       BlocProvider<SearchBloc>(create: (_) => locator<SearchBloc>()),
+      BlocProvider<NetworkBloc>(
+          create: (_) => locator<NetworkBloc>()
+            ..add(CheckConnectedEvent(result: ConnectivityResult.none))
+      ),
     ], child: const WeatherAppView());
   }
 }

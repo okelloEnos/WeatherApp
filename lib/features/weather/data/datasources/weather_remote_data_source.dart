@@ -19,7 +19,7 @@ class WeatherRemoteDataSourceImpl implements WeatherRemoteDataSource {
 
   @override
   Future<dynamic> fetchCitiesRequest({required String locationName}) async{
-    locationName = "London";
+    // locationName = "London";
     var url = "http://api.openweathermap.org/geo/1.0/direct?q=$locationName&limit=5&appid=${Secrets.weatherApiKey}";
 
     final response = await _dio.get(url);

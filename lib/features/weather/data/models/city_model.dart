@@ -9,8 +9,8 @@ class CityModel extends CityEntity{
       name: json['name'],
       country: json['country'],
       state: json['state'],
-      latitude: json['latitude'],
-      longitude: json['longitude']
+      latitude: json['lat'],
+      longitude: json['lon']
     );
   }
 
@@ -19,8 +19,8 @@ class CityModel extends CityEntity{
       'name': name,
       'country': country,
       'state': state,
-      'latitude': latitude,
-      'longitude': longitude
+      'lat': latitude,
+      'lon': longitude
     };
   }
 }

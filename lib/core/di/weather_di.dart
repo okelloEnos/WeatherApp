@@ -7,10 +7,12 @@ void invokeWeatherDI({required GetIt locator}) {
   // data source
   locator.registerLazySingleton<WeatherRemoteDataSource>(
           () => WeatherRemoteDataSourceImpl(dio: locator()));
+  locator.registerLazySingleton<WeatherLocalDataSource>(
+          () => WeatherLocalDataSourceImpl(sharedPreferences: locator()));
 
   // repository
   locator.registerLazySingleton<WeatherRepository>(
-          () => WeatherRepositoryImpl(remoteDataSource: locator()));
+          () => WeatherRepositoryImpl(remoteDataSource: locator(), localDataSource: locator()));
 
   // use case
   locator.registerLazySingleton(() => FetchCurrentWeatherUseCase(repository: locator()));
