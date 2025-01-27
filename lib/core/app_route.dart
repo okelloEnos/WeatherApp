@@ -32,7 +32,7 @@ final GoRouter appRouter = GoRouter(
         state: state,
         duration: 500,
         transitionType: PageTransitionType.rightToLeft,
-        child: WeatherDetailScreen(weatherEntity: state.extra as WeatherEntity,),
+        child: WeatherDetailScreen(weather: state.extra as WeatherEntity,),
       ),
     ),
 

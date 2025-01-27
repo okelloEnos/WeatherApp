@@ -99,7 +99,7 @@ class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
              WeatherEntity weather = state.currentWeather;
          return GestureDetector(
            onTap: (){
-             context.push('/weather_detail', extra: const WeatherEntity());
+             context.push('/weather_detail', extra: weather);
            },
            child: Container(
              padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 8.0, bottom: 8.0),
@@ -216,7 +216,7 @@ class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
               WeatherEntity weather = state.predictedWeather[index];
               return GestureDetector(
                 onTap: (){
-                  context.push('/weather_detail', extra: const WeatherEntity());
+                  context.push('/weather_detail', extra: weather);
                 },
                 child: Container(
                   padding: const EdgeInsets.all(8.0),
