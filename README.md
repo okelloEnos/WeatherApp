@@ -1,16 +1,10 @@
-# weather_app
+# Weather App
 
 A mobile app that shows current weather and predicts weather for coming days.
 
-## Getting Started
+## Instructions
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1. Ensure you have Flutter SDK 3.19.5 installed.
+2. Clone the codebase and open it in your preferred IDE (e.g., Android Studio or Visual Studio Code).
+3. Connect a physical device or emulator (virtual device) via USB or Wi-Fi.
+4. Run the app by clicking "Run" in the IDE or using the command flutter run in the terminal.
