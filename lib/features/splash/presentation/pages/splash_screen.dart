@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
-import 'package:weather_app/core/common_widgets/custom_elevated_button.dart';
 
 import '../../../../core/core_barrel.dart';
 
@@ -19,9 +19,6 @@ class SplashScreen extends StatelessWidget {
           const MyLottie(
             lottie: 'assets/lottie/weather.json',
             size: Size(400, 400),
-            // shouldPlay: true,
-            // playOnce: false,
-            // reverse: true,
           ),
           const Spacer(),
           Padding(
@@ -32,7 +29,7 @@ class SplashScreen extends StatelessWidget {
                 btnText: "Get Started", onPressed: (){
               context.push('/weather_home');
             }),
-          ),
+          ).animate().slideY(begin: 8, end: 0, duration: const Duration(milliseconds: 1200)),
           const SizedBox(height: 64.0,)
         ],
       ),

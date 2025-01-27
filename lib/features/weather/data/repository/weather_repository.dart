@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_app/core/core_barrel.dart';
 import 'package:weather_app/core/values/constants.dart';
@@ -78,6 +80,26 @@ class WeatherRepositoryImpl implements WeatherRepository{
     // fetch from local storage
     final response = await _localDataSource.getPredictedWeather();
     predictedWeatherList = List.from(response['list']).map((e) => WeatherModel.fromJson(e).toEntity()).toList();
+
+
+    DateTime now = DateTime.now();
+    final filteredData = predictedWeatherList.where((entry) {
+      bool validEntry = false;
+      final DateTime entryTime = DateTime.fromMillisecondsSinceEpoch(int.parse(entry.dateTime!) * 1000, isUtc: true);
+      if(entryTime.isAfter(now.add(const Duration(hours: 24)))){
+        now = now.add(const Duration(hours: 24));
+        validEntry = true;
+      }
+      return validEntry;
+    }).toList();
+
+    if(filteredData.length > 5){
+      predictedWeatherList = filteredData.sublist(0, 6);
+    }
+    else{
+      predictedWeatherList = filteredData;
+    }
+
     return predictedWeatherList;
   }
 

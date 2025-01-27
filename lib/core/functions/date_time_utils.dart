@@ -7,6 +7,12 @@ class DateTimeUtils{
     return '${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')} ';
   }
 
+  static String formatTimestampForecast({required int timestamp}) {
+    final DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000, isUtc: true);
+    var formatter = DateFormat('EEEE, MMMM dd');
+    return formatter.format(dateTime.toLocal());
+  }
+
   static String formattedDate(DateTime dateTime) {
     var formatter = DateFormat('MMMM dd, yyyy - h:mm a');
     return formatter.format(dateTime.toLocal());

@@ -20,7 +20,7 @@ class WeatherRemoteDataSourceImpl implements WeatherRemoteDataSource {
   @override
   Future<dynamic> fetchCitiesRequest({required String locationName}) async{
     // locationName = "London";
-    var url = "http://api.openweathermap.org/geo/1.0/direct?q=$locationName&limit=5&appid=${Secrets.weatherApiKey}";
+    var url = "http://api.openweathermap.org/geo/1.0/direct?q=$locationName&appid=${Secrets.weatherApiKey}";
 
     final response = await _dio.get(url);
 
@@ -36,12 +36,15 @@ class WeatherRemoteDataSourceImpl implements WeatherRemoteDataSource {
 
   @override
   Future<dynamic> fetchCurrentWeatherRequest({required CityModel city}) async{
-    String locationName = "Nairobi";
-    double latitude = -1.30326415;
-    double longitude = 36.826384099341595;
+    String locationName = "${city.name}";
+    double latitude = city.latitude ?? 0.0;
+    double longitude = city.longitude ?? 0.0;
+    // await Future.delayed(const Duration(hours: 1));
+    // double latitude = -1.294242;
+    // double longitude = 36.795149;
 
     // var url = "${Constants.baseUrl}/weather?q=$locationName&appid=${Secrets.weatherApiKey}";
-    var url = "${Constants.baseUrl}/weather?lat=$latitude&lon=$longitude&appid=${Secrets.weatherApiKey}";
+    var url = "${Constants.baseUrl}/weather?lat=$latitude&lon=$longitude&units=metric&appid=${Secrets.weatherApiKey}";
 
     final response = await _dio.get(url);
 
@@ -57,12 +60,15 @@ class WeatherRemoteDataSourceImpl implements WeatherRemoteDataSource {
 
   @override
   Future<dynamic> fetchPredictedWeatherRequest({required CityModel city, required int days}) async{
-    String locationName = "Nairobi";
-    double latitude = -1.30326415;
-    double longitude = 36.826384099341595;
+    String locationName = "${city.name}";
+    double latitude = city.latitude ?? 0.0;
+    double longitude = city.longitude ?? 0.0;
+    // double latitude = -1.294242;
+    // double longitude = 36.795149;
+    days = 100;
+    // await Future.delayed(const Duration(hours: 1));
 
-    // var url = "${Constants.baseUrl}/forecast?appid=${Secrets.weatherApiKey}&cnt=$days&q=$locationName";
-    var url = "${Constants.baseUrl}/forecast?lat=$latitude&lon=$longitude&cnt=$days&appid=${Secrets.weatherApiKey}";
+    var url = "${Constants.baseUrl}/forecast?lat=$latitude&lon=$longitude&cnt=$days&units=metric&appid=${Secrets.weatherApiKey}";
 
     final response = await _dio.get(url);
 
