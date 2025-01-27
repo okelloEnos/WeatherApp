@@ -1,14 +1,11 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:weather_app/core/common_widgets/common_widgets_barrel.dart';
 import 'package:weather_app/core/functions/functions_barrel.dart';
 import 'package:weather_app/core/values/values_barrel.dart';
 import 'package:weather_app/features/features_barrel.dart';
-
 import '../../../../core/core_barrel.dart';
 
 class WeatherHomeScreen extends StatefulWidget {
@@ -67,8 +64,8 @@ class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       CustomText(text: "Good ${greetingTime()},", fontSize: 18.0, fontWeight: FontWeight.w500),
-                      CustomText(text: "$lastUpdated", fontSize: 16.0, fontWeight: FontWeight.w300),
-                      const CustomText(text: "Thursday, April 25 2025", fontSize: 16.0, fontWeight: FontWeight.w300),
+                      CustomText(text: DateTimeUtils.formattedDateHeader(DateTime.now()), fontSize: 14.0, fontWeight: FontWeight.w300),
+                      (lastUpdated?.isNotEmpty ?? false) ? CustomText(text: "(Last Updated On: ${DateTimeUtils.formattedDate(DateTime.parse(lastUpdated!))})", fontSize: 10.0, fontWeight: FontWeight.w300) : const SizedBox.shrink(),
                     ],
                   ),
                   GestureDetector(onTap: () async{

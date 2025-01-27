@@ -20,7 +20,6 @@ class CheckConnectedEvent extends NetworkEvent{
 
 class NetworkBloc extends Bloc<NetworkEvent, NetworkStatus> {
   NetworkBloc() : super(NetworkStatus.notDetermined) {
-    // checkConnection();
     _init();
     on<CheckConnectedEvent>(_checkConnected);
   }
@@ -36,22 +35,10 @@ class NetworkBloc extends Bloc<NetworkEvent, NetworkStatus> {
     bool isConnected = false;
 
     if(result != ConnectivityResult.none){
-      bool isOnline = await InternetConnectionChecker.instance.hasConnection;
+      bool isOnline = await InternetConnectionChecker().hasConnection;
       isConnected = isOnline;
     }
 
     emit(isConnected ? NetworkStatus.on : NetworkStatus.off);
   }
-
-  // Future<void> checkConnection() async {
-  //   bool isConnected = false;
-  //   List<ConnectivityResult> result = await Connectivity().checkConnectivity();
-  //   if (result.first != ConnectivityResult.none) {
-  //     bool isOnline = await InternetConnection().hasInternetAccess;
-  //     debugPrint('result: $result, result1: $isOnline');
-  //     isConnected = isOnline;
-  //   }
-  //
-  //   emit(isConnected ? NetworkStatus.on : NetworkStatus.off);
-  // }
 }

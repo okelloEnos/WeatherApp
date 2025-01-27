@@ -4,6 +4,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 
 Future<bool> hasInternetConnection() async {
   var connectionTwo = (await Connectivity().checkConnectivity()).first != ConnectivityResult.none;
-  var connection = await InternetConnectionChecker.instance.hasConnection;
+  // var connection = await InternetConnectionChecker.instance.hasConnection;
+  var connection = await InternetConnectionChecker().hasConnection;
   return (connection && connectionTwo);
 }

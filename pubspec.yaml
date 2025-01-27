@@ -25,10 +25,12 @@ dependencies:
   flutter_svg: ^2.0.10+1
   envied: ^0.5.4+1
   page_transition: ^2.1.0
-  intl: ^0.20.2
   shared_preferences: ^2.2.3
-  connectivity_plus: ^6.1.2
-  internet_connection_checker: ^3.0.1
+  intl: ^0.17.0
+  internet_connection_checker: ^1.0.0+1
+  connectivity_plus: ^6.0.3
+#  internet_connection_checker:
+#  connectivity_plus:
 
 dev_dependencies:
   flutter_test:

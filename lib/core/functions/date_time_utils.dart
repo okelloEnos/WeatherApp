@@ -11,4 +11,9 @@ class DateTimeUtils{
     var formatter = DateFormat('MMMM dd, yyyy - h:mm a');
     return formatter.format(dateTime.toLocal());
   }
+
+  static String formattedDateHeader(DateTime dateTime) {
+    var formatter = DateFormat('EEEE, MMMM dd, yyyy');
+    return formatter.format(dateTime.toLocal());
+  }
 }

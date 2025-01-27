@@ -3,10 +3,10 @@ import 'package:equatable/equatable.dart';
 import '../../weather_barrel.dart';
 
 class WeatherEntity extends Equatable{
-  final int? dateTime;
+  final String? dateTime;
   final List<Weather>? listOfWeather;
   final Main? main;
-  final int? visibility;
+  final String? visibility;
   final Wind? wind;
   final Cloud? cloud;
   final Rain? rain;
@@ -18,7 +18,7 @@ class WeatherEntity extends Equatable{
 }
 
 class Weather extends Equatable{
-  final int? id;
+  final String? id;
   final String? main;
   final String? description;
   final String? icon;
@@ -30,12 +30,12 @@ class Weather extends Equatable{
 }
 
 class Main extends Equatable{
-  final double? temp;
-  final double? feelsLike;
-  final double? tempMin;
-  final double? tempMax;
-  final int? pressure;
-  final int? humidity;
+  final String? temp;
+  final String? feelsLike;
+  final String? tempMin;
+  final String? tempMax;
+  final String? pressure;
+  final String? humidity;
 
   const Main({this.temp, this.feelsLike, this.tempMin, this.tempMax, this.pressure, this.humidity});
 
@@ -44,8 +44,8 @@ class Main extends Equatable{
 }
 
 class Wind extends Equatable{
-  final double? speed;
-  final int? deg;
+  final String? speed;
+  final String? deg;
 
   const Wind({this.speed, this.deg});
 
@@ -54,7 +54,7 @@ class Wind extends Equatable{
 }
 
 class Cloud extends Equatable{
-  final int? all;
+  final String? all;
 
   const Cloud({this.all});
 
@@ -63,8 +63,8 @@ class Cloud extends Equatable{
 }
 
 class Rain extends Equatable{
-  final double? oneHour;
-  final double? threeHours;
+  final String? oneHour;
+  final String? threeHours;
 
   const Rain({this.oneHour, this.threeHours});
 
