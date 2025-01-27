@@ -321,7 +321,8 @@ class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
           child: state == NetworkStatus.off
               ? Container(
               color: Colors.red,
-              child: const Center(child: CustomText(text: "You are offline", fontSize: 16.0, fontWeight: FontWeight.w500)))
+              padding: const EdgeInsets.all(8.0),
+              child: const Center(child: CustomText(text: "You are offline", fontSize: 14.0, fontWeight: FontWeight.w500)))
               : const SizedBox(),
         ),
       ],

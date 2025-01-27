@@ -80,58 +80,6 @@ class WeatherSearchDelegate extends SearchCustomDelegate<CityEntity?> {
        );
      }
 
-     // Add the search query to the Bloc when the user types
-     _onQueryChanged(query, (searchTerm) {
-       context.read<SearchBloc>().add(FetchCityListEvent(query: searchTerm));
-     });
-
-     return BlocBuilder<SearchBloc, SearchState>(
-       builder: (context, state) {
-         if (state is SearchLoading) {
-           return Center(
-             child: CircularProgressIndicator(),
-           );
-         } else if (state is SearchLoaded) {
-           if (state.cities.isEmpty) {
-             return Center(
-               child: Text(
-                 "No Results Found.",
-                 style: TextStyle(color: Colors.grey),
-               ),
-             );
-           }
-           return ListView.builder(
-             itemCount: state.cities.length,
-             itemBuilder: (context, index) {
-               final result = state.cities[index];
-               return ListTile(
-                 title: Text(result.name ?? ""),
-                 subtitle: Text(result.country ?? ""),
-                 onTap: () {
-                   // Handle navigation or actions when a result is tapped
-                   close(context, result);
-                 },
-               );
-             },
-           );
-         } else if (state is SearchError) {
-           return Center(
-             child: Text(
-               "An error occurred. Please try again.",
-               style: TextStyle(color: Colors.red),
-             ),
-           );
-         }
-         return Center(
-           child: Text("Start typing to see results."),
-         );
-       },
-     );
-   }
-
-   @override
-   Widget buildSuggestions(BuildContext context) {
-     // Add debouncing for suggestions if needed
      _onQueryChanged(query, (searchTerm) {
        context.read<SearchBloc>().add(FetchCityListEvent(query: searchTerm));
      });
@@ -140,31 +88,109 @@ class WeatherSearchDelegate extends SearchCustomDelegate<CityEntity?> {
        builder: (context, state) {
          if (query.isEmpty) {
            return Center(
-             child: Text(
-               "Type to see suggestions.",
-               style: TextStyle(color: Colors.grey),
-             ),
+             child: CustomText(text: "Type to see suggestions.", color: Theme.of(context).colorScheme.onPrimary, fontSize: 14.0,),
            );
          }
 
          if (state is SearchLoaded && state.cities.isNotEmpty) {
-           final suggestions = state.cities.take(5).toList(); // Limit to 5 suggestions
-           return ListView.builder(
-             itemCount: suggestions.length,
-             itemBuilder: (context, index) {
-               final suggestion = suggestions[index];
-               return ListTile(
-                 title: Text(suggestion.name ?? ""),
-                 onTap: () {
-                   query = suggestion.name ?? "";
-                   // showResults(context); // Triggers buildResults
-                   close(context, suggestion);
-                 },
-               );
-             },
+           final suggestions = state.cities.take(5).toList();
+
+           return Padding(
+             padding: const EdgeInsets.symmetric(horizontal: 16.0),
+             child: ListView.separated(
+               separatorBuilder: (context, index) => const SizedBox(height: 8.0),
+               itemCount: suggestions.length,
+               itemBuilder: (context, index) {
+                 final suggestion = suggestions[index];
+                 return GestureDetector(
+                   child: Container(
+                       padding: const EdgeInsets.all(8.0),
+                       decoration: BoxDecoration(
+                         color: Theme.of(context).colorScheme.onPrimary,
+                         borderRadius: BorderRadius.circular(8),
+                       ),
+                       child: CustomText(text: suggestion.name ?? "", color: Theme.of(context).colorScheme.primary, fontSize: 14.0, fontWeight: FontWeight.w500,)),
+                   onTap: () {
+                     query = suggestion.name ?? "";
+                     close(context, suggestion);
+                   },
+                 );
+               },
+             ),
            );
          }
-         return Center(child: CircularProgressIndicator());
+         return Padding(
+           padding: const EdgeInsets.symmetric(horizontal: 16.0),
+           child: ListView.separated(
+             separatorBuilder: (context, index) => const SizedBox(height: 8.0),
+             itemCount: 4,
+             itemBuilder: (context, index) {
+               return const ShimmerContainer(
+                   width: double.infinity,
+                   borderRadius: 8.0,
+                   height: 40);
+             },
+           ),
+         );
+       },
+     );
+   }
+
+   @override
+   Widget buildSuggestions(BuildContext context) {
+     _onQueryChanged(query, (searchTerm) {
+       context.read<SearchBloc>().add(FetchCityListEvent(query: searchTerm));
+     });
+
+     return BlocBuilder<SearchBloc, SearchState>(
+       builder: (context, state) {
+         if (query.isEmpty) {
+           return Center(
+             child: CustomText(text: "Type to see suggestions.", color: Theme.of(context).colorScheme.onPrimary, fontSize: 14.0,),
+           );
+         }
+
+         if (state is SearchLoaded && state.cities.isNotEmpty) {
+           final suggestions = state.cities.take(5).toList();
+
+           return Padding(
+             padding: const EdgeInsets.symmetric(horizontal: 16.0),
+             child: ListView.separated(
+               separatorBuilder: (context, index) => const SizedBox(height: 8.0),
+               itemCount: suggestions.length,
+               itemBuilder: (context, index) {
+                 final suggestion = suggestions[index];
+                 return GestureDetector(
+                   child: Container(
+                     padding: const EdgeInsets.all(8.0),
+                       decoration: BoxDecoration(
+                         color: Theme.of(context).colorScheme.onPrimary,
+                         borderRadius: BorderRadius.circular(8),
+                       ),
+                       child: CustomText(text: suggestion.name ?? "", color: Theme.of(context).colorScheme.primary, fontSize: 14.0, fontWeight: FontWeight.w500,)),
+                   onTap: () {
+                     query = suggestion.name ?? "";
+                     close(context, suggestion);
+                   },
+                 );
+               },
+             ),
+           );
+         }
+         return Padding(
+           padding: const EdgeInsets.symmetric(horizontal: 16.0),
+           child: ListView.separated(
+             separatorBuilder: (context, index) => const SizedBox(height: 8.0),
+             itemCount: 4,
+             itemBuilder: (context, index) {
+
+               return const ShimmerContainer(
+                   width: double.infinity,
+                   borderRadius: 8.0,
+                   height: 40);
+             },
+           ),
+         );
        },
      );
    }

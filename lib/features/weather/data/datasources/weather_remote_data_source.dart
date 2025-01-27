@@ -39,11 +39,7 @@ class WeatherRemoteDataSourceImpl implements WeatherRemoteDataSource {
     String locationName = "${city.name}";
     double latitude = city.latitude ?? 0.0;
     double longitude = city.longitude ?? 0.0;
-    // await Future.delayed(const Duration(hours: 1));
-    // double latitude = -1.294242;
-    // double longitude = 36.795149;
 
-    // var url = "${Constants.baseUrl}/weather?q=$locationName&appid=${Secrets.weatherApiKey}";
     var url = "${Constants.baseUrl}/weather?lat=$latitude&lon=$longitude&units=metric&appid=${Secrets.weatherApiKey}";
 
     final response = await _dio.get(url);
@@ -63,10 +59,7 @@ class WeatherRemoteDataSourceImpl implements WeatherRemoteDataSource {
     String locationName = "${city.name}";
     double latitude = city.latitude ?? 0.0;
     double longitude = city.longitude ?? 0.0;
-    // double latitude = -1.294242;
-    // double longitude = 36.795149;
     days = 100;
-    // await Future.delayed(const Duration(hours: 1));
 
     var url = "${Constants.baseUrl}/forecast?lat=$latitude&lon=$longitude&cnt=$days&units=metric&appid=${Secrets.weatherApiKey}";
 
